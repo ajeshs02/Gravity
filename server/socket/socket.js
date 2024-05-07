@@ -7,10 +7,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
   cors: {
     credentials: true,
-    origin: [
-      'http://localhost:3000',
-      'https://gravshop-ecommerce.onrender.com',
-    ],
+    origin: ['http://localhost:3000', 'https://gravity-3xtg.onrender.com'],
   },
 })
 
