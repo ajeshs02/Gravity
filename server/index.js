@@ -40,11 +40,7 @@ app.use(cookieParser())
 app.use(
   cors({
     credentials: true,
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      'https://gravshop-ecommerce.onrender.com',
-    ],
+    origin: ['http://localhost:3000', 'https://gravity-3xtg.onrender.com'],
   })
 )
 
