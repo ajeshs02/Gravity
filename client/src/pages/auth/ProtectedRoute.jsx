@@ -1,12 +1,15 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { checkUserTokenExpiration } from '../../state/slices/userSlice'
 import { checkStoreTokenExpiration } from '../../state/slices/storeSlice'
 import { checkAdminTokenExpiration } from '../../state/slices/adminSlice'
 
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
 const ProtectedRoute = ({ children, role }) => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     dispatch(checkUserTokenExpiration())

@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   getStoreProfile,
   getStoreProducts,
   userFOllowStore,
+  userMessageStore,
 } from '../../api/user'
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -22,6 +23,8 @@ const PublicStoreProfile = () => {
 
   const queryClient = useQueryClient()
 
+  const navigate = useNavigate()
+
   const {
     data: store,
     isLoading,
@@ -39,6 +42,16 @@ const PublicStoreProfile = () => {
     },
   })
 
+  const {
+    mutateAsync: messageStoreMutation,
+    isPending: isMessageStorePending,
+  } = useMutation({
+    mutationFn: userMessageStore,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['chats'], { exact: true })
+    },
+  })
+
   const handleFollowButtonClick = async () => {
     setIsFollowing((prevIsFollowing) => !prevIsFollowing)
 
@@ -48,6 +61,15 @@ const PublicStoreProfile = () => {
       console.error('Error following store:', error)
 
       setIsFollowing((prevIsFollowing) => !prevIsFollowing)
+    }
+  }
+
+  const handleInitiateChat = async () => {
+    try {
+      await messageStoreMutation(store._id)
+      navigate('/chats')
+    } catch (error) {
+      console.error('Error initiating store chat:', error)
     }
   }
 
@@ -122,19 +144,30 @@ const PublicStoreProfile = () => {
               </span>
               <a href={`tel:${store.mobile}`}>{store.mobile}</a>
             </p>
-            {isAuthenticated && (
-              <button
-                onClick={handleFollowButtonClick}
-                className="p-1 w-24 bg-uAccent text-white font-semibold rounded-lg active:scale-[0.99] my-10 shadow-lg hover:scale-[1.01] "
-                disabled={isPending}
-              >
-                {isPending
-                  ? 'Loading...'
-                  : isFollowing
-                  ? 'Following'
-                  : 'Follow'}
-              </button>
-            )}
+            <div className="flex items-center gap-x-3">
+              {isAuthenticated && (
+                <button
+                  onClick={handleFollowButtonClick}
+                  className="p-1 w-24 bg-uAccent text-white font-semibold rounded-lg active:scale-[0.99] my-10 shadow-lg hover:scale-[1.01] "
+                  disabled={isPending}
+                >
+                  {isPending
+                    ? 'Loading...'
+                    : isFollowing
+                    ? 'Following'
+                    : 'Follow'}
+                </button>
+              )}
+              {isAuthenticated && (
+                <button
+                  onClick={handleInitiateChat}
+                  className="p-1 w-24 bg-uAccent text-white font-semibold rounded-lg active:scale-[0.99] my-10 shadow-lg hover:scale-[1.01] "
+                  disabled={isPending}
+                >
+                  {isMessageStorePending ? 'Loading...' : 'Message'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </section>

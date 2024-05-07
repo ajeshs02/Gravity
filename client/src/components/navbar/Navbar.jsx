@@ -77,33 +77,6 @@ const Navbar = ({ navbarLinks, sidebarLinks, user = 'user' }) => {
     }
   }
 
-  // function debounce(func, delay) {
-  //   let debounceTimer
-  //   return function () {
-  //     const context = this
-  //     const args = arguments
-  //     clearTimeout(debounceTimer)
-  //     debounceTimer = setTimeout(() => func.apply(context, args), delay)
-  //   }
-  // }
-
-  // const debouncedNavigation = useCallback(
-  //   debounce((value) => {
-  //     if (value.trim() === '') {
-  //       navigate(`/browse`)
-  //     } else {
-  //       navigate(`/browse?search=${value}`)
-  //     }
-  //   }, 500),
-  //   [navigate]
-  // )
-
-  // useEffect(() => {
-  //   if (search.trim() !== '') {
-  //     debouncedNavigation(search)
-  //   }
-  // }, [search, debouncedNavigation])
-
   return (
     <header className="fixed top-0 left-0 right-0 min-h-16 h-auto flex flex-col justify-center pt-2  bg-primary z-20 shadow-sm rounded-b-lg ">
       {logoutModal && <UserLogoutModal setLogoutModal={setLogoutModal} />}

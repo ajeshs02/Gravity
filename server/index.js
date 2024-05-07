@@ -16,20 +16,21 @@ import { userPaymentRouter } from './routes/user/paymentRoutes.js'
 import { userOrdersRouter } from './routes/user/ordersRoutes.js'
 import { storeOrderRoutes } from './routes/store/storeOrderRoutes.js'
 import { userProductRouter } from './routes/user/productRoutes.js'
-import User from './models/userModel.js'
 import { storeDashboardRouter } from './routes/store/storeDashboardRoutes.js'
 import { adminUserRouter } from './routes/admin/adminUserRoutes.js'
 import { adminStoreRouter } from './routes/admin/adminStoreRoutes.js'
 import { adminOrderRouter } from './routes/admin/adminOrdersRoutes.js'
 import { adminDashboardRouter } from './routes/admin/adminDashboardRoutes.js'
 import { adminRouter } from './routes/admin/adminRoutes.js'
+import { app, server } from './socket/socket.js'
+import { userMessageRoute } from './routes/user/userMessageRoutes.js'
+import { storeMessageRoute } from './routes/store/storeMessageRoutes.js'
+import { storeUserRouter } from './routes/store/storeUserRoutes.js'
 
 //for database connection
 connectDB()
 
 const port = process.env.PORT || 4000
-
-const app = express()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -55,6 +56,7 @@ app.use('/api/v1/user/cart', userCartRouter)
 app.use('/api/v1/user/address', userAddressRouter)
 app.use('/api/v1/user/payment', userPaymentRouter)
 app.use('/api/v1/user/orders', userOrdersRouter)
+app.use('/api/v1/user', userMessageRoute)
 
 // store routes
 app.use('/api/v1/store', storeRouter)
@@ -62,6 +64,8 @@ app.use('/api/v1/store/category', productCategoryRouter)
 app.use('/api/v1/store/product', storeProductRouter)
 app.use('/api/v1/store/orders', storeOrderRoutes)
 app.use('/api/v1/store/dashboard', storeDashboardRouter)
+app.use('/api/v1/store/user', storeUserRouter)
+app.use('/api/v1/store/', storeMessageRoute)
 
 //admin routes
 app.use('/api/v1/admin/', adminRouter)
@@ -75,6 +79,6 @@ app.use(notFound)
 app.use(errorHandler)
 
 //server starting on specified port
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is listening to port ${port}`)
 })

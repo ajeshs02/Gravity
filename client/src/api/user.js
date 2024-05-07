@@ -342,6 +342,39 @@ export const userFOllowStore = async (storeId) => {
   }
 }
 
+//User Initialize store chat
+export const userMessageStore = async (storeId) => {
+  try {
+    const { data } = await axios.post(`/user/initiateChat/${storeId}`)
+    return data
+  } catch (error) {
+    console.error('error following store', error)
+    handleApiError(error)
+  }
+}
+
+//User fetch all private chats
+export const userFetchChats = async () => {
+  try {
+    const { data } = await axios.get(`/user/chats`)
+    return data.data
+  } catch (error) {
+    console.error('error following store', error)
+    handleApiError(error)
+  }
+}
+
+//User Initialize store chat
+export const userFetchMessages = async (storeId) => {
+  try {
+    const { data } = await axios.post(`/user/initiateChat/${storeId}`)
+    return data
+  } catch (error) {
+    console.error('error following store', error)
+    handleApiError(error)
+  }
+}
+
 //user add/remove wishlist
 export const fetchWishlist = async () => {
   try {

@@ -129,6 +129,18 @@ export const getStoreProfile = async () => {
   }
 }
 
+// user profile
+export const getUserProfile = async (userId) => {
+  try {
+    const { data } = await axios.get(`/store/user/${userId}`)
+    await delay(300)
+    return data.store
+  } catch (error) {
+    console.error('Error fetching store profile:', error)
+    handleApiError(error)
+  }
+}
+
 //  fetch store orders
 export const fetchStoreOrders = async () => {
   try {
@@ -215,6 +227,39 @@ export const storeProductImageDelete = async ({
     return data
   } catch (error) {
     console.error('error deleting product image', error)
+    handleApiError(error)
+  }
+}
+
+//Store Initialize user chat
+export const storeMessageUser = async (userId) => {
+  try {
+    const { data } = await axios.post(`/store/initiateChat/${userId}`)
+    return data
+  } catch (error) {
+    console.error('error initiating chat with user', error)
+    handleApiError(error)
+  }
+}
+
+//Store fetch all private chats
+export const storeFetchChats = async () => {
+  try {
+    const { data } = await axios.get(`/store/chats`)
+    return data.data
+  } catch (error) {
+    console.error('error fetching chats', error)
+    handleApiError(error)
+  }
+}
+
+//Store fetch messages with user
+export const storeFetchMessages = async (userId) => {
+  try {
+    const { data } = await axios.get(`/store/messages/${userId}`)
+    return data
+  } catch (error) {
+    console.error('error fetching messages', error)
     handleApiError(error)
   }
 }

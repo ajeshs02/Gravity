@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import axios from 'axios'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer } from 'react-toastify'
@@ -49,79 +49,135 @@ import StoreNotFound from './pages/store/NotFound'
 
 //context
 import { ToastProvider } from './context/ToastContext'
+import AdminNotFound from './pages/admin/AdminNotFound'
+
+import UserChatsPage from './pages/user/UserChatsPage'
+import UserMessagePage from './pages/user/UserMessagePage'
+import { SocketProvider } from './context/SocketContext'
+import StoreChatsPage from './pages/store/StoreChatsPage'
+import StoreMessagePage from './pages/store/StoreMessagePage'
 
 axios.defaults.baseURL = import.meta.env.VITE_API_URL
 axios.defaults.withCredentials = true
 
 const queryClient = new QueryClient()
+const router = createBrowserRouter([
+  {
+    path: '/register',
+    element: <RegisterPage />,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/verify-otp',
+    element: <OTP />,
+  },
+  {
+    element: <ProtectedRoute role={'user'} />,
+    children: [
+      {
+        element: <UserLayout />,
+        errorElement: <NotFound />,
+        children: [
+          { path: '/', element: <HomePage /> },
+          { path: '/browse/*', element: <ProductsPage /> },
+          { path: '/stores', element: <StoresPage /> },
+          { path: '/categories', element: <Categories /> },
+          { path: '/brand', element: <Categories /> },
+          { path: '/store/:storeId', element: <PublicStoreProfile /> },
+          { path: '/product/:id', element: <ProductDetailsPage /> },
+          { path: '/orders', element: <OrdersPage /> },
+          { path: '/cart', element: <CartPage /> },
+          { path: '/profile', element: <ProfilePage /> },
+
+          {
+            path: '/chats',
+            element: (
+              <SocketProvider>
+                <UserChatsPage />
+              </SocketProvider>
+            ),
+          },
+          {
+            path: '/message/:conversationId',
+            element: (
+              <SocketProvider>
+                <UserMessagePage />
+              </SocketProvider>
+            ),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/store/verify-otp',
+    element: <StoreOTP />,
+  },
+  {
+    element: <ProtectedRoute role={'store'} />,
+    children: [
+      {
+        path: 'store',
+        element: <StoreLayout />,
+        errorElement: <StoreNotFound />,
+        children: [
+          { path: '', element: <StoreHomePage /> }, // Changed from '/' to ''
+          { path: 'products', element: <StoreProducts /> },
+          { path: 'product/:id', element: <StoreProductDetailsPage /> },
+          { path: 'orders', element: <StoreOrders /> },
+          { path: 'profile', element: <StoreProfile /> },
+
+          {
+            path: 'chats',
+            element: (
+              <SocketProvider>
+                <StoreChatsPage />
+              </SocketProvider>
+            ),
+          },
+          {
+            path: 'message/:conversationId',
+            element: (
+              <SocketProvider>
+                <StoreMessagePage />
+              </SocketProvider>
+            ),
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '/admin-login',
+    element: <AdminLoginPage />,
+  },
+  {
+    element: <ProtectedRoute role={'admin'} />,
+    children: [
+      {
+        path: 'admin',
+        element: <AdminLayout />,
+        errorElement: <AdminNotFound />,
+        children: [
+          { path: '', element: <AdminHomePage /> },
+          { path: 'stores', element: <AdminStorePage /> },
+          { path: 'users', element: <AdminUserPage /> },
+          { path: 'orders', element: <AdminOrdersPage /> },
+        ],
+      },
+    ],
+  },
+])
 
 const App = () => {
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <ToastProvider>
-          <Router>
-            <Routes>
-              {/* General Routes */}
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
-
-              {/* User Routes*/}
-              <Route path="/verify-otp" element={<OTP />} />
-              {/* User Protected Route */}
-              <Route element={<ProtectedRoute role="user" />}>
-                {/* user layout */}
-                <Route path="/" element={<UserLayout />}>
-                  <Route index element={<HomePage />} />
-                  <Route path="/browse/*" element={<ProductsPage />} />
-                  <Route path="/stores" element={<StoresPage />} />
-                  <Route path="/categories" element={<Categories />} />
-                  <Route path="/brand" element={<Categories />} />
-                  <Route
-                    path="/store/:storeId"
-                    element={<PublicStoreProfile />}
-                  />
-                  <Route path="/product/:id" element={<ProductDetailsPage />} />
-
-                  <Route path="/orders" element={<OrdersPage />} />
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                </Route>
-              </Route>
-
-              {/* Store  Routes */}
-              <Route path="/store/verify-otp" element={<StoreOTP />} />
-              {/* store layout */}
-              <Route element={<ProtectedRoute role="store" />}>
-                <Route path="store/" element={<StoreLayout />}>
-                  <Route index element={<StoreHomePage />} />
-                  <Route path="products" element={<StoreProducts />} />
-                  <Route
-                    path="product/:id"
-                    element={<StoreProductDetailsPage />}
-                  />
-                  <Route path="orders" element={<StoreOrders />} />
-                  <Route path="profile" element={<StoreProfile />} />
-                </Route>
-              </Route>
-
-              {/* Admin Routes */}
-              <Route path="/admin-login" element={<AdminLoginPage />} />
-              {/* admin layout */}
-              <Route element={<ProtectedRoute role="admin" />}>
-                <Route path="admin/*" element={<AdminLayout />}>
-                  <Route index element={<AdminHomePage />} />
-                  <Route path="stores" element={<AdminStorePage />} />
-                  <Route path="users" element={<AdminUserPage />} />
-                  <Route path="orders" element={<AdminOrdersPage />} />
-                </Route>
-              </Route>
-
-              {/* NotFound pages */}
-              <Route path="/*" element={<NotFound />} />
-              <Route path="/store/*" element={<StoreNotFound />} />
-            </Routes>
-          </Router>
+          <RouterProvider router={router} />
           <ToastContainer
             position="bottom-left"
             autoClose={3000}

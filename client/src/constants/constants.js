@@ -5,6 +5,7 @@ import { IoLogIn } from 'react-icons/io5'
 import { FaStore } from 'react-icons/fa'
 import { GoHomeFill } from 'react-icons/go'
 import { LuPackage } from 'react-icons/lu'
+import { BiSolidMessageSquareDetail } from 'react-icons/bi'
 // user navbar links
 export const userNavbarLinks = [
   {
@@ -22,6 +23,10 @@ export const userNavbarLinks = [
   {
     link: '/profile',
     text: 'Profile',
+  },
+  {
+    link: '/chats',
+    text: 'Chats',
   },
 ]
 
@@ -47,6 +52,11 @@ export const userSidebarLinks = [
     link: '/profile',
     text: 'Profile',
   },
+  {
+    icon: BiSolidMessageSquareDetail,
+    link: '/chats',
+    text: 'Messages',
+  },
 ]
 
 // store navbar links
@@ -66,6 +76,10 @@ export const storeNavbarLinks = [
   {
     link: '/store/profile',
     text: 'Profile',
+  },
+  {
+    link: '/store/chats',
+    text: 'Messages',
   },
 ]
 
@@ -90,6 +104,11 @@ export const storeSidebarLinks = [
     icon: FaStore,
     link: '/store/profile',
     text: 'Profile',
+  },
+  {
+    icon: BiSolidMessageSquareDetail,
+    link: '/store/chats',
+    text: 'Messages',
   },
 ]
 
