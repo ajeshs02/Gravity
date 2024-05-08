@@ -131,7 +131,7 @@ const loginStore = async (req, res) => {
   try {
     const store = await Store.findOne({ email }).select('+password')
 
-    console.log('store login', store)
+    // console.log('store login', store)
 
     if (store && store.isBlocked) {
       res.status(401).json({

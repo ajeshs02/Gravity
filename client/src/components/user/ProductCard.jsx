@@ -39,7 +39,7 @@ const ProductCard = ({ item, link = '/product' }) => {
             </div>
           )}
           <img
-            loading="lazy"
+            loading="eager"
             src={images[0].url}
             alt={name}
             className="h-full w-full object-contain object-center"

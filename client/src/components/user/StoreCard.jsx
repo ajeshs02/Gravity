@@ -24,7 +24,7 @@ const StoreCard = ({ item }) => {
       >
         <div className="h-4/6 max-sm:h-full w-full max-sm:w-3/5 bg-secondary p-2 relative">
           <img
-            loading="lazy"
+            loading="eager"
             src={image.url}
             alt={storeName}
             className="h-full w-full object-contain object-center"
